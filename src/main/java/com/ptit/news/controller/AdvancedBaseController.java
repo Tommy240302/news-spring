@@ -44,7 +44,7 @@ public abstract class AdvancedBaseController extends BaseController {
      */
     protected <T> ResponseEntity<Response<T>> executeCommandWithCustomStatus(Object command, HttpStatus successStatus) {
         Response<T> result = executeCommand(command);
-        HttpStatus status = result.getStatus().equals("Success") ? successStatus : HttpStatus.BAD_REQUEST;
+        HttpStatus status = "Success".equalsIgnoreCase(result.getStatus().toString()) ? successStatus : HttpStatus.BAD_REQUEST;
         return ResponseEntity.status(status).body(result);
     }
 

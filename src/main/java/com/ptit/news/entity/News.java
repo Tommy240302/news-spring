@@ -1,11 +1,7 @@
 package com.ptit.news.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
@@ -13,6 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -20,6 +17,7 @@ import java.util.List;
 public class News extends BaseEntity {
     private String title;
     private String summary;
+    private String image;
     private String content;
     private boolean status;
     private Integer views;
