@@ -133,6 +133,34 @@ Response:
 
 ```
 
+#### 6. Đề xuất làm tác giả
+```http
+POST /api/users/request-author
+Content-Type: application/json
+Authorization: Bearer YOUR_ACCESS_TOKEN
+{
+    "profileUrl":"http://....",
+    "sampleArticles": "http://...",
+    "reason":"ssssss"
+}
+```
+Response:
+```json
+{
+    "data": {
+        "id": 1,
+        "profileUrl": "http://...",
+        "sampleArticles": "http://...",
+        "reason": "ssssss",
+        "status": "PENDING"
+    },
+    "message": "Yêu cầu thành công hãy đợi phê duyệt",
+    "errorMessage": null,
+    "status": "Success"
+}
+
+```
+
 ## Cách thêm Command mới
 
 ### 1. Tạo Command DTO

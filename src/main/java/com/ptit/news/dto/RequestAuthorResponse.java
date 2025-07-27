@@ -12,12 +12,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestAuthorResponse {
+    private Long id;
     private String profileUrl;
     private String sampleArticles;
     private String reason;
     private RequestAuthorStatus status;
 
     public RequestAuthorResponse(RequestAuthor requestAuthor) {
+        this.id = requestAuthor.getId();
         this.profileUrl = requestAuthor.getProfileUrl();
         this.sampleArticles = requestAuthor.getSampleArticles();
         this.reason = requestAuthor.getReason();
