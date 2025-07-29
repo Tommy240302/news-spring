@@ -1,6 +1,6 @@
 package com.ptit.news.command.handler;
 
-import com.ptit.news.command.dto.RequestAuthorCommand;
+import com.ptit.news.command.dto.CreateRequestAuthorCommand;
 import com.ptit.news.common.Response;
 import com.ptit.news.common.enums.RequestAuthorStatus;
 import com.ptit.news.dto.RequestAuthorResponse;
@@ -29,7 +29,7 @@ public class RequestAuthorCommandHandler {
     private UserRepository userRepository;
 
     @CommandHandler
-    public Response<RequestAuthorResponse> handler(RequestAuthorCommand command) {
+    public Response<RequestAuthorResponse> handler(CreateRequestAuthorCommand command) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             User user = userRepository.findByEmail(authentication.getName()).orElse(null);

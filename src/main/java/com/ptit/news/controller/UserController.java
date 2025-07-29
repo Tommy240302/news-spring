@@ -1,6 +1,6 @@
 package com.ptit.news.controller;
 
-import com.ptit.news.command.dto.RequestAuthorCommand;
+import com.ptit.news.command.dto.CreateRequestAuthorCommand;
 import com.ptit.news.dto.RequestAuthorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +33,7 @@ public class UserController extends AdvancedBaseController {
     }
 
     @PostMapping("/request-author")
-    public ResponseEntity<Response<RequestAuthorResponse>> requestAuthor(@RequestBody RequestAuthorCommand command) {
+    public ResponseEntity<Response<RequestAuthorResponse>> requestAuthor(@RequestBody CreateRequestAuthorCommand command) {
         return executeCommandWithCustomStatus(command, HttpStatus.CREATED);
     }
 }

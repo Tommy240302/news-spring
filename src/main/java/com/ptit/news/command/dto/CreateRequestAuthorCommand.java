@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestAuthorCommand {
+public class CreateRequestAuthorCommand {
     private String profileUrl;
     private String sampleArticles;
     private String reason;
