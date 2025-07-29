@@ -41,7 +41,7 @@ public class RequestAuthorCommandHandler {
             if (requestAuthorEx.isPresent()) {
                 if (requestAuthorEx.get().getStatus().equals(RequestAuthorStatus.PENDING))
                 {
-                    return Response.Error("Đang chờ duyệt vui lòng đợi");
+                    return Response.Error("Yêu cầu của bạn đang chờ duyệt vui lòng không tạo thêm yêu cầu mới");
                 }
                 return Response.Error("Bạn đã là tác giả");
             }
@@ -52,6 +52,7 @@ public class RequestAuthorCommandHandler {
                     .sampleArticles(command.getSampleArticles())
                     .profileUrl(command.getProfileUrl())
                     .status(RequestAuthorStatus.PENDING)
+                    .paymentNumber(command.getPaymentNumber())
                     .build();
 
             requestAuthorRepository.save(requestAuthor);

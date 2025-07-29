@@ -13,4 +13,5 @@ public class RequestAuthorCommand {
     private String profileUrl;
     private String sampleArticles;
     private String reason;
+    private String paymentNumber;
 }

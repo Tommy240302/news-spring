@@ -19,6 +19,7 @@ public class RequestAuthor extends BaseEntity {
     private String profileUrl;
     private String sampleArticles;
     private String reason;
+    private String paymentNumber;
 
     @Enumerated(EnumType.STRING)
     private RequestAuthorStatus status;
