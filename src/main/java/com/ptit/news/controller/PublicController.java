@@ -4,6 +4,8 @@ import com.ptit.news.common.Response;
 import com.ptit.news.dto.CategoryResponse;
 import com.ptit.news.query.dto.GetAllCategoryQuery;
 import lombok.extern.slf4j.Slf4j;
+import org.axonframework.messaging.responsetypes.ResponseType;
+import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,11 +19,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/public")
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
-public class PublicController extends AdvancedBaseController {
+public class PublicController extends BaseController {
 
     @GetMapping("/categories")
-    public ResponseEntity<Response<List<CategoryResponse>>> getAllCategory() {
-        return executeQueryWithCustomStatus(new GetAllCategoryQuery(), HttpStatus.OK);
+    public Response<List<CategoryResponse>> getAllCategory() {
+        return executeQuery(new GetAllCategoryQuery());
     }
 
 }

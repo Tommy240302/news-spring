@@ -1,13 +1,10 @@
 package com.ptit.news.command.handler;
 
 import com.ptit.news.command.dto.CreateNewsCommand;
-import com.ptit.news.command.dto.CreateUserCommand;
 import com.ptit.news.common.Response;
-import com.ptit.news.common.enums.UserRole;
 import com.ptit.news.dto.NewsResponse;
 import com.ptit.news.entity.Category;
 import com.ptit.news.entity.News;
-import com.ptit.news.entity.Role;
 import com.ptit.news.entity.User;
 import com.ptit.news.repository.CategoryRepository;
 import com.ptit.news.repository.NewsRepository;
@@ -16,7 +13,6 @@ import com.ptit.news.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
