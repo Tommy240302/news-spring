@@ -30,7 +30,7 @@ public abstract class AdvancedBaseController extends BaseController {
      */
     protected <T> ResponseEntity<Response<T>> executeQueryWithResponse(Object query) {
         Response<T> result = executeQuery(query);
-        HttpStatus status = result.getStatus().equals("Success") ? HttpStatus.OK : HttpStatus.NOT_FOUND;
+        HttpStatus status = "Success".equalsIgnoreCase(result.getStatus().toString()) ? HttpStatus.OK : HttpStatus.NOT_FOUND;
         return ResponseEntity.status(status).body(result);
     }
 
@@ -44,7 +44,7 @@ public abstract class AdvancedBaseController extends BaseController {
      */
     protected <T> ResponseEntity<Response<T>> executeCommandWithCustomStatus(Object command, HttpStatus successStatus) {
         Response<T> result = executeCommand(command);
-        HttpStatus status = result.getStatus().equals("Success") ? successStatus : HttpStatus.BAD_REQUEST;
+        HttpStatus status = "Success".equalsIgnoreCase(result.getStatus().toString())? successStatus : HttpStatus.BAD_REQUEST;
         return ResponseEntity.status(status).body(result);
     }
 

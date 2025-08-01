@@ -99,6 +99,40 @@ Content-Type: application/json
 GET /api/auth/user/{email}
 ```
 
+#### 5. Thêm bài đăng
+```http
+POST /api/author/create
+Content-Type: application/json
+Authorization: Bearer YOUR_ACCESS_TOKEN
+{
+    "title":"title",
+    "summary":"summary",
+    "content":"html",
+    "image":"main image",
+    "categoryId": 1
+}
+```
+Response:
+```json
+{
+    "data": {
+        "id": 1,
+        "title": "title",
+        "summary": "summary",
+        "image": "main image",
+        "view": 0,
+        "status": false,
+        "content": "html",
+        "authorId": 2,
+        "publishedAt": null
+    },
+    "message": "Tạo bài đăng thành công",
+    "errorMessage": null,
+    "status": "Success"
+}
+
+```
+
 ## Cách thêm Command mới
 
 ### 1. Tạo Command DTO
