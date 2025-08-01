@@ -3,24 +3,24 @@ package com.ptit.news.controller;
 import com.ptit.news.common.Response;
 import com.ptit.news.dto.CategoryResponse;
 import com.ptit.news.query.dto.GetAllCategoryQuery;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import lombok.RequiredArgsConstructor;
+// ...existing code...
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 
-@Slf4j
+
+
 @RestController
-@RequestMapping("/api/public")
+@RequestMapping("/api/categories")
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
-public class PublicController extends AdvancedBaseController {
+@RequiredArgsConstructor
+public class CategoryController extends AdvancedBaseController {
 
-    @GetMapping("/categories")
-    public Response<List<CategoryResponse>> getAllCategory() {
+    // ...existing code...
+
+    @GetMapping
+    public Response<List<CategoryResponse>> getAllCategories() {
         List<CategoryResponse> categories = queryGateway.query(
                 new GetAllCategoryQuery(),
                 org.axonframework.messaging.responsetypes.ResponseTypes.multipleInstancesOf(CategoryResponse.class)
