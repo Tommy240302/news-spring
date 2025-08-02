@@ -1,8 +1,11 @@
+
 package com.ptit.news.controller;
 
 import com.ptit.news.common.Response;
 import com.ptit.news.dto.CategoryResponse;
+import com.ptit.news.dto.NewsResponse;
 import com.ptit.news.query.dto.GetAllCategoryQuery;
+import com.ptit.news.query.dto.GetAllPostQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
