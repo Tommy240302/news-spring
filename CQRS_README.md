@@ -158,9 +158,55 @@ Response:
     "errorMessage": null,
     "status": "Success"
 }
-
+```
+#### 7. Người dùng comment
+```http
+POST /api/users/addComment
+Content-Type: application/json
+Authorization: Bearer YOUR_ACCESS_TOKEN
+{
+    "comment":"Hay quá",
+    "newsId":1
+}
+```
+Response:
+```json
+{
+    "data": {
+        "content": "Hay quá",
+        "approved": true
+    },
+    "message": "Đã ghi nhận comment",
+    "errorMessage": null,
+    "status": "Success"
+}
 ```
 
+#### 8. Lấy bài viết theo Id (Đã duyệt)
+```http
+POST /api/public/{newsId}
+Content-Type: application/json
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+Response:
+```json
+{
+  "data": {
+    "id": 1,
+    "title": "title",
+    "summary": "summary",
+    "image": "main image",
+    "view": 0,
+    "status": true,
+    "content": "html",
+    "authorId": 2,
+    "publishedAt": null
+  },
+  "message": "Thành công",
+  "errorMessage": null,
+  "status": "Success"
+}
+```
 ## Cách thêm Command mới
 
 ### 1. Tạo Command DTO

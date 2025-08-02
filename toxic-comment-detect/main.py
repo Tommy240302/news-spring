@@ -1,22 +1,30 @@
-import joblib
-import sys
-import warnings
+from toxic_predict import toxic_comment_predict
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
-warnings.filterwarnings("ignore")
+app = FastAPI()
 
-def toxic_comment_predict(comment):
-    with open("toxic-comment-detect/tfidf_vectorizer.pkl", "rb") as f:
-        vectorizer = joblib.load(f)
+origins = [
+    "http://loalhost:5173",
+    "http://127.0.0.1:5273",
+    "http://127.0.0.1:6969"
+]
 
-    with open("toxic-comment-detect/toxic_comment_model.pkl", "rb") as f:
-        model = joblib.load(f)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-    vec = vectorizer.transform([comment])
-    res = model.predict(vec)
-    return res[0] == 1
 
-if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        print(toxic_comment_predict(sys.argv[1]))
-    else:
-        print("No name provided.")
+class CommentRequest(BaseModel):
+    comment: str
+
+
+@app.post("/toxic-comment-detect")
+def commentDetect(req: CommentRequest):
+    result = toxic_comment_predict(req.comment)
+    return {"is_toxic": bool(result)}

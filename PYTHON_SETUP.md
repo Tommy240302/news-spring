@@ -9,5 +9,10 @@
   venv\Scripts\activate
 ```
 ```shell
-  pip install scikit-learn
+  pip install -r requirement.txt
 ```
+```shell
+  uvicorn main:app --reload
+```
+
+Giữ cmd để có thể chạy modul add comment
