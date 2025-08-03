@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import com.ptit.news.query.dto.GetUserByIdQuery;
 import com.ptit.news.dto.UserResponse;
 import com.ptit.news.common.Response;
+import com.ptit.news.query.dto.GetUserByEmailQuery;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -23,5 +26,13 @@ public class UserController extends BaseController {
     @PostMapping("/addComment")
     public Response<CommentResponse> addComment(@RequestBody AddCommentCommand command) {
         return executeCommand(command);
+    }
+
+    @GetMapping("/me")
+    public Response<UserResponse> getCurrentUserProfile() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        GetUserByEmailQuery query = GetUserByEmailQuery.builder().email(email).build();
+        return executeQuery(query, UserResponse.class);
     }
 }

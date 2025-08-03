@@ -20,7 +20,7 @@ public class NewsResponse {
     private Integer view;
     private boolean status;
     private String content;
-    private Long authorId;
+    private String authorName;
     private Date publishedAt;
 
     public NewsResponse(News news) {
@@ -31,7 +31,13 @@ public class NewsResponse {
         this.image = news.getImage();
         this.view = news.getViews();
         this.status = news.isStatus();
-        this.authorId = news.getAuthor().getId();
+        if (news.getAuthor() != null) {
+            String first = news.getAuthor().getFirstName() != null ? news.getAuthor().getFirstName() : "";
+            String last = news.getAuthor().getLastName() != null ? news.getAuthor().getLastName() : "";
+            this.authorName = (first + " " + last).trim();
+        } else {
+            this.authorName = null;
+        }
         this.publishedAt = news.getPublishedAt();
     }
 

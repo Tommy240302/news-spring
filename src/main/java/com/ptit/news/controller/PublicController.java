@@ -1,3 +1,4 @@
+
 package com.ptit.news.controller;
 
 import com.ptit.news.common.Response;
@@ -7,6 +8,9 @@ import com.ptit.news.dto.NewsResponse;
 import com.ptit.news.query.dto.GetAllCategoryQuery;
 import com.ptit.news.query.dto.GetAllCommentApprovedByNewsId;
 import com.ptit.news.query.dto.GetPostByIdQuery;
+
+import com.ptit.news.dto.NewsResponse;
+import com.ptit.news.query.dto.GetAllPostQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.springframework.http.HttpStatus;
