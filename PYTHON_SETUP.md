@@ -15,4 +15,12 @@
   uvicorn main:app --reload
 ```
 
+Những lần tiếp theo chỉ cần chạy
+```shell
+  venv\Scripts\activate
+```
+```shell
+  uvicorn main:app --reload
+```
+
 Giữ cmd để có thể chạy modul add comment

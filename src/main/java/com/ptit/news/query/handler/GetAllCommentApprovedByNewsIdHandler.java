@@ -22,7 +22,7 @@ public class GetAllCommentApprovedByNewsIdHandler {
     @QueryHandler
     public List<CommentResponse> handle(GetAllCommentApprovedByNewsId query) {
         try {
-            return commentRepository.findByNewsId(query.getNewsId()).stream()
+            return commentRepository.findByNewsIdOrderByCreatedAtDesc(query.getNewsId()).stream()
                     .filter(Comment::getIsApproved)
                     .map(CommentResponse::new)
                     .toList();
