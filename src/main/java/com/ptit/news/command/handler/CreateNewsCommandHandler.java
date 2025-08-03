@@ -33,16 +33,14 @@ public class CreateNewsCommandHandler {
     @CommandHandler
     public Response<NewsResponse> handle(CreateNewsCommand command) {
         try {
-            // Có auth
-//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//            User user = userRepository.findByEmail(authentication.getName()).orElse(null);
-//
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String email = authentication.getName();
+            User user = userRepository.findByEmail(email).orElse(null);
 
-            // test
-            User user = userRepository.findByEmail("writer@gmail.com").orElse(null);
             if (user == null) {
-                return Response.Error("Không tìm thấy authencation");
+                return Response.Error("Không tìm thấy thông tin người dùng đang đăng nhập");
             }
+
             Category category = categoryRepository.findById(command.getCategoryId()).orElse(null);
             if (category == null) {
                 return Response.Error("Chủ đề không tồn tại");
@@ -50,15 +48,13 @@ public class CreateNewsCommandHandler {
             if (command.getTitle() == null) {
                 return Response.Error("Bài viết không có tiêu đề");
             }
-//            if (command.getSummary() == null) {
-//                return Response.Error("Bài viết không có tóm tắt");
-//            }
             if (command.getContent() == null) {
                 return Response.Error("Bài viết không có nội dung");
             }
             if (command.getImage() == null) {
                 command.setImage("https://ik.imagekit.io/dx1lgwjws/News/NewsDefault.png");
             }
+
             News news = News.builder()
                     .summary(command.getSummary())
                     .author(user)
@@ -69,6 +65,7 @@ public class CreateNewsCommandHandler {
                     .views(0)
                     .content(command.getContent())
                     .build();
+
             newsRepository.save(news);
             return Response.Success(new NewsResponse(news), "Tạo bài đăng thành công");
 
@@ -77,4 +74,5 @@ public class CreateNewsCommandHandler {
             return Response.Error("Không thể tạo bài đăng");
         }
     }
+
 }
