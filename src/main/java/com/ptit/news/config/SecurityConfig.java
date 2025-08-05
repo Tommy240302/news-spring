@@ -76,7 +76,7 @@ public class SecurityConfig {
 public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // hoặc "*", nếu không bảo mật
-    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"));
     config.setAllowedHeaders(Arrays.asList("*"));
     config.setAllowCredentials(true); // nếu bạn dùng cookies/session
     config.setMaxAge(3600L); // thời gian cache CORS (giảm preflight)

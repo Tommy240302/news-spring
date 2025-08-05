@@ -1,5 +1,6 @@
 package com.ptit.news.controller;
 
+import com.ptit.news.command.dto.CountViewCommand;
 import com.ptit.news.common.Response;
 import com.ptit.news.dto.CommentResponse;
 import com.ptit.news.dto.NewsResponse;
@@ -8,6 +9,7 @@ import com.ptit.news.query.dto.GetAllPostQuery;
 import com.ptit.news.query.dto.GetPostByIdQuery;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -41,5 +43,10 @@ public class NewsController extends AdvancedBaseController {
                 ResponseTypes.multipleInstancesOf(CommentResponse.class)
         ).join();
         return Response.Success(commentResponses, "Lấy comment thành công");
+    }
+
+    @PatchMapping("/addView")
+    public Response<String> addView(@RequestBody CountViewCommand command) {
+        return executeCommand(command);
     }
 }
