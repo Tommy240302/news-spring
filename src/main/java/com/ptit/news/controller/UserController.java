@@ -1,5 +1,7 @@
 package com.ptit.news.controller;
 
+import com.ptit.news.command.dto.AddCommentCommand;
+import com.ptit.news.dto.CommentResponse;
 import org.springframework.web.bind.annotation.*;
 import com.ptit.news.query.dto.GetUserByIdQuery;
 import com.ptit.news.dto.UserResponse;
@@ -19,6 +21,11 @@ public class UserController extends BaseController {
     public Response<UserResponse> getUserById(@PathVariable Long id) {
         GetUserByIdQuery query = GetUserByIdQuery.builder().id(id).build();
         return executeQuery(query, UserResponse.class);
+    }
+
+    @PostMapping("/addComment")
+    public Response<CommentResponse> addComment(@RequestBody AddCommentCommand command) {
+        return executeCommand(command);
     }
 
     @GetMapping("/me")

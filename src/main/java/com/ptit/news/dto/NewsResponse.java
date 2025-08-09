@@ -22,6 +22,8 @@ public class NewsResponse {
     private String content;
     private String authorName;
     private Date publishedAt;
+    private UserResponse user;
+    private CategoryResponse category;
 
     public NewsResponse(News news) {
         this.id = news.getId();
@@ -39,6 +41,8 @@ public class NewsResponse {
             this.authorName = null;
         }
         this.publishedAt = news.getPublishedAt();
+        this.user = new UserResponse(news.getAuthor());
+        this.category = new CategoryResponse(news.getCategory());
     }
 
 }

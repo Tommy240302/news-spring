@@ -1,5 +1,6 @@
 package com.ptit.news.config;
 
+import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +33,14 @@ public class SecurityConfig {
     @Qualifier("handlerExceptionResolver")
     private HandlerExceptionResolver exceptionResolver;
 
+    @NonFinal
+    private final String[] PUBLIC_ENDPOINTS = {
+            "/api/auth/**", "/api/otp/send", "/api/master-data/**", "/health", "/init","api/public/**",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/api/news/**"
+    };
+
     @Bean
     public JwtFilter jwtFilter() {
         return new JwtFilter(exceptionResolver);
@@ -52,9 +61,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/api/otp/send", "/api/master-data/**", "/health", "/init","/api/author/**","api/public/**",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**")
+                        .requestMatchers(PUBLIC_ENDPOINTS)
                         .permitAll()
                         .requestMatchers("/api/users/me").authenticated()
                         .requestMatchers("/api/**").authenticated()
@@ -69,7 +76,7 @@ public class SecurityConfig {
 public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // hoặc "*", nếu không bảo mật
-    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"));
     config.setAllowedHeaders(Arrays.asList("*"));
     config.setAllowCredentials(true); // nếu bạn dùng cookies/session
     config.setMaxAge(3600L); // thời gian cache CORS (giảm preflight)
