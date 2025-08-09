@@ -34,15 +34,13 @@ public abstract class BaseController {
     /**
      * Deprecated: Không còn dùng nữa — không rõ kiểu trả về sẽ gây lỗi Axon.
      */
+    /**
+     * Deprecated: Không còn dùng nữa — Luôn ném lỗi để tránh dùng nhầm, hãy dùng queryGateway.query với ResponseTypes phù hợp.
+     */
     @Deprecated
     @SuppressWarnings("unchecked")
     protected <T> Response<T> executeQuery(Object query) {
-        try {
-            return (Response<T>) queryGateway.query(query, ResponseTypes.instanceOf(Object.class)).join();
-        } catch (Exception e) {
-            log.error("Error executing query (deprecated): {}", query.getClass().getSimpleName(), e);
-            return Response.Error("Lỗi khi thực hiện truy vấn");
-        }
+        throw new UnsupportedOperationException("Không được dùng executeQuery(Object query) nữa. Hãy dùng queryGateway.query với ResponseTypes phù hợp!");
     }
 
     /**

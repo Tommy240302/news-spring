@@ -24,6 +24,8 @@ import jakarta.persistence.Table;
 public class Category extends BaseEntity {
     private String content;
 
+    private String slug; 
+
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Category parent;

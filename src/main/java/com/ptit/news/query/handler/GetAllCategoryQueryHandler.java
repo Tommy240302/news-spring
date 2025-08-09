@@ -21,17 +21,14 @@ public class GetAllCategoryQueryHandler {
     private CategoryRepository categoryRepository;
 
     @QueryHandler
-    public Response<List<CategoryResponse>> handler(GetAllCategoryQuery query) {
+    public List<CategoryResponse> handle(GetAllCategoryQuery query) {
         try {
-            List<CategoryResponse> categoryResponses = categoryRepository.findAll().stream()
+            return categoryRepository.findAll().stream()
                     .map(CategoryResponse::new)
                     .toList();
-            return Response.Success(categoryResponses, "Lấy dữ liệu thành công");
-        } catch (ResourceNotFoundException e) {
-            throw e;
         } catch (Exception e) {
-            log.error("Error getting category: {}", e.getMessage(), e);
-            throw new InvalidRequestException("Failed to get category");
+            log.error("Lỗi khi lấy danh sách chuyên mục: {}", e.getMessage(), e);
+            throw new InvalidRequestException("Không thể lấy danh sách chuyên mục.");
         }
     }
 }
