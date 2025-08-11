@@ -36,6 +36,8 @@ public class User extends BaseEntity implements UserDetails {
     @Column(length = 20)
     private String phone;
 
+    private String paymentNumber;
+
     private String avatar;
 
     @ManyToMany(fetch = FetchType.EAGER)

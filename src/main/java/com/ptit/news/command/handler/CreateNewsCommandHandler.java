@@ -1,7 +1,6 @@
 package com.ptit.news.command.handler;
 
 import com.ptit.news.command.dto.CreateNewsCommand;
-import com.ptit.news.command.dto.CreateUserCommand;
 import com.ptit.news.common.Response;
 import com.ptit.news.dto.NewsResponse;
 import com.ptit.news.entity.Category;
@@ -9,6 +8,7 @@ import com.ptit.news.entity.News;
 import com.ptit.news.entity.User;
 import com.ptit.news.repository.CategoryRepository;
 import com.ptit.news.repository.NewsRepository;
+import com.ptit.news.repository.RoleRepository;
 import com.ptit.news.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandHandler;
@@ -30,9 +30,13 @@ public class CreateNewsCommandHandler {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @CommandHandler
     public Response<NewsResponse> handle(CreateNewsCommand command) {
         try {
+
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String email = authentication.getName();
             User user = userRepository.findByEmail(email).orElse(null);
