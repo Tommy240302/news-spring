@@ -6,16 +6,19 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.axonframework.commandhandling.CommandHandler;
 import com.ptit.news.command.dto.SignInCommand;
-import com.ptit.news.command.dto.AuthResponse;
-import com.ptit.news.dto.UserResponse;
+import com.ptit.news.command.dto.AuthResponse; // Đảm bảo AuthResponse là một DTO phù hợp
+import com.ptit.news.dto.UserResponse; // Đảm bảo UserResponse là một DTO phù hợp
 import com.ptit.news.entity.User;
 import com.ptit.news.entity.Token;
 import com.ptit.news.repository.UserRepository;
 import com.ptit.news.repository.TokenRepository;
-import com.ptit.news.service.JwtService;
-import com.ptit.news.common.Response;
+import com.ptit.news.service.JwtService; // Giả định JwtService có generateToken
+import com.ptit.news.common.Response; // Giả định Response.Success tồn tại
 import org.springframework.security.authentication.BadCredentialsException;
 import lombok.extern.slf4j.Slf4j;
+
+import java.time.LocalDateTime; // Import LocalDateTime
+import java.util.UUID; // Import UUID nếu sử dụng cho refresh token
 
 @Slf4j
 @Component
@@ -41,15 +44,17 @@ public class SignInCommandHandler {
             Boolean isRemember = command.getIsRemember() != null && "true".equalsIgnoreCase(command.getIsRemember());
 
             // Xác thực bằng AuthenticationManager
+            // AuthenticationManager sẽ gọi UserDetailsService, nơi đã dùng findByEmailAndIsDeletedFalse
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
 
             // Lấy user sau khi xác thực thành công
-            User user = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new BadCredentialsException("User not found"));
+            // Dùng findByEmailAndIsDeletedFalse để đảm bảo chỉ lấy user đang hoạt động
+            User user = userRepository.findByEmailAndIsDeletedFalse(email) // Sửa lỗi ở đây
+                    .orElseThrow(() -> new BadCredentialsException("User not found or account is disabled/deleted."));
 
-            // Kiểm tra user có enabled không
+            // Kiểm tra user có enabled không (mặc dù UserDetailsService đã kiểm tra isEnabled)
             if (!user.getIsEnabled()) {
-                throw new BadCredentialsException("Tài khoản đã bị khóa");
+                throw new BadCredentialsException("Tài khoản đã bị khóa.");
             }
 
             // Tạo JWT token
@@ -62,19 +67,18 @@ public class SignInCommandHandler {
 
             AuthResponse authResponse = AuthResponse.builder()
                     .token(accessToken)
-                    .refreshToken(null)
-                    .user(new UserResponse(user))
+                    .refreshToken(null) // Nếu bạn không dùng refresh token, có thể bỏ qua
+                    .user(new UserResponse(user)) // Đảm bảo UserResponse constructor nhận User entity
                     .build();
 
             return Response.Success(authResponse, "Đăng nhập thành công");
 
         } catch (BadCredentialsException e) {
-            System.out.println("Chạy được vào breaking 1");
-            throw e;
+            log.warn("Authentication failed for email {}: {}", command.getEmail(), e.getMessage());
+            throw e; // Ném lại ngoại lệ BadCredentialsException
         } catch (Exception e) {
-            log.error("Error during sign in: {}", e.getMessage(), e);
-            System.out.println("Chạy được vào breaking 2");
-            throw new BadCredentialsException("Lỗi khi đăng nhập");
+            log.error("Error during sign in for email {}: {}", command.getEmail(), e.getMessage(), e);
+            throw new RuntimeException("Lỗi khi đăng nhập: " + e.getMessage()); // Ném RuntimeException chung
         }
     }
 
@@ -84,12 +88,13 @@ public class SignInCommandHandler {
                 .isSignOut(false)
                 .user(user)
                 .build();
+        token.setCreatedAt(LocalDateTime.now()); // Đảm bảo đặt createdAt cho Token
 
         try {
             tokenRepository.save(token);
             log.info("Token saved successfully for user: {}", user.getEmail());
         } catch (Exception e) {
-            log.error("Error saving token: {}", e.getMessage(), e);
+            log.error("Error saving token for user {}: {}", user.getEmail(), e.getMessage(), e);
         }
     }
 }

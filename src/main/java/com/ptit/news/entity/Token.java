@@ -11,7 +11,8 @@ import jakarta.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Token {
+@EqualsAndHashCode(callSuper = true) // Rất quan trọng: Bao gồm các trường của BaseEntity
+public class Token extends BaseEntity { // Quan trọng: Kế thừa BaseEntity
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +25,6 @@ public class Token {
     private Boolean isSignOut;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "email_user")
+    @JoinColumn(name = "email_user") // Đảm bảo rằng cột này tồn tại trong cơ sở dữ liệu của bạn
     private User user;
 }

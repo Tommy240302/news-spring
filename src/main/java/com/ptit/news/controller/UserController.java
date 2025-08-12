@@ -1,5 +1,9 @@
 package com.ptit.news.controller;
 
+import com.ptit.news.command.dto.CreateRequestAuthorCommand;
+import com.ptit.news.dto.RequestAuthorResponse;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import com.ptit.news.command.dto.AddCommentCommand;
 import com.ptit.news.dto.CommentResponse;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +30,11 @@ public class UserController extends BaseController {
     @PostMapping("/addComment")
     public Response<CommentResponse> addComment(@RequestBody AddCommentCommand command) {
         return executeCommand(command);
+    }
+
+    @PostMapping("/request-author")
+    public ResponseEntity<Response<RequestAuthorResponse>> requestAuthor(@RequestBody CreateRequestAuthorCommand command) {
+        return executeCommandWithCustomStatus(command, HttpStatus.CREATED);
     }
 
     @GetMapping("/me")

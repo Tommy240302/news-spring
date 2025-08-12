@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,37 +29,52 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public String generateToken(Map<String, Object> extractClaims, UserDetails userDetails, Boolean isRemember) {
+    // Phương thức chính để tạo JWT token
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails, Boolean isRemember) {
         Date dateExpiration;
         if (isRemember) {
-            dateExpiration = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 30);
+            dateExpiration = new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 30); // 30 ngày
         } else {
-            dateExpiration = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24);
+            dateExpiration = new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24); // 24 giờ
         }
 
         return Jwts
                 .builder()
-                .setClaims(extractClaims)
+                .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis())) // thời gian tạo ra jwt
+                .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(dateExpiration)
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
+    // Phương thức này sẽ được gọi từ SignInCommandHandler
+    public String generateToken(UserDetails userDetails, Boolean isRemember) {
+        // Tạo một HashMap để chứa các claims
+        Map<String, Object> claims = new HashMap<>();
+
+        // **Phần quan trọng:** Lấy vai trò (authorities) từ UserDetails
+        // và thêm vào claims.
+        // Spring Security lưu trữ vai trò trong Authorities dưới dạng GrantedAuthority.
+        // Bạn cần map chúng thành List<String> để đưa vào token.
+        claims.put("roles", userDetails.getAuthorities().stream()
+                .map(authority -> authority.getAuthority())
+                .collect(Collectors.toList()));
+
+        // Gọi phương thức tạo token với claims đã có vai trò
+        return generateToken(claims, userDetails, isRemember);
+    }
+
+    // ... các phương thức khác giữ nguyên
 
     public String generateTokenForgotPassword(String email) {
         return Jwts
                 .builder()
                 .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
-
-    }
-
-    public String generateToken(UserDetails userDetails, Boolean isRemember) {
-        return generateToken(new HashMap<>(), userDetails, isRemember);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolve) {

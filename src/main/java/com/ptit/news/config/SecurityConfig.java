@@ -38,7 +38,8 @@ public class SecurityConfig {
             "/api/auth/**", "/api/otp/send", "/api/master-data/**", "/health", "/init","api/public/**",
             "/swagger-ui/**",
             "/v3/api-docs/**",
-            "/api/news/**"
+            "/api/news/**",
+            "/admin/author-requests"
     };
 
     @Bean
@@ -49,12 +50,6 @@ public class SecurityConfig {
     @Autowired
     private AuthenticationProvider authenticationProvider;
 
-    // @Bean
-    // public AuthenticationManager
-    // authenticationManager(AuthenticationConfiguration config) throws Exception {
-    // return config.getAuthenticationManager();
-    // }
-    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -72,18 +67,19 @@ public class SecurityConfig {
 
         return http.build();
     }
+
     @Bean
-public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration config = new CorsConfiguration();
-    config.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // hoặc "*", nếu không bảo mật
-    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"));
-    config.setAllowedHeaders(Arrays.asList("*"));
-    config.setAllowCredentials(true); // nếu bạn dùng cookies/session
-    config.setMaxAge(3600L); // thời gian cache CORS (giảm preflight)
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        config.setAllowedHeaders(Arrays.asList("*"));
+        config.setAllowCredentials(true);
+        config.setMaxAge(3600L);
 
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", config);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
 
-    return source;
-}
+        return source;
+    }
 }

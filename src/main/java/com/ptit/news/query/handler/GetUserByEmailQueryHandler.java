@@ -21,7 +21,8 @@ public class GetUserByEmailQueryHandler {
     @QueryHandler
     public UserResponse handle(GetUserByEmailQuery query) {
         try {
-            User user = userRepository.findByEmail(query.getEmail())
+            // Sửa lỗi: Thay findByEmail bằng findByEmailAndIsDeletedFalse
+            User user = userRepository.findByEmailAndIsDeletedFalse(query.getEmail())
                     .orElseThrow(() -> new ResourceNotFoundException("User", "email", query.getEmail()));
 
             // Dùng constructor sẵn có để convert sang UserResponse

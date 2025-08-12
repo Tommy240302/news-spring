@@ -2,7 +2,7 @@ package com.ptit.news.common.enums;
 
 public enum UserRole {
     READER("READER"),
-    WRITER("WRITER"),
+    AUTHOR("AUTHOR"),
     ADMIN("ADMIN");
 
     private final String value;

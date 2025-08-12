@@ -35,5 +35,5 @@ public class News extends BaseEntity {
     @OneToMany(mappedBy = "news")
     private List<Comment> comments;
 
-    private boolean isDeleted;
+
 }
