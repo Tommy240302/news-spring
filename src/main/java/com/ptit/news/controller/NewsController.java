@@ -1,40 +1,33 @@
-
 package com.ptit.news.controller;
 
+import com.ptit.news.command.dto.CountViewCommand;
 import com.ptit.news.common.Response;
-import com.ptit.news.dto.CategoryResponse;
 import com.ptit.news.dto.CommentResponse;
 import com.ptit.news.dto.NewsResponse;
-import com.ptit.news.query.dto.GetAllCategoryQuery;
 import com.ptit.news.query.dto.GetAllCommentApprovedByNewsId;
-import com.ptit.news.query.dto.GetPostByIdQuery;
-
-import com.ptit.news.dto.NewsResponse;
 import com.ptit.news.query.dto.GetAllPostQuery;
-import lombok.extern.slf4j.Slf4j;
+import com.ptit.news.query.dto.GetPostByIdQuery;
+import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
-@Slf4j
 @RestController
-@RequestMapping("/api/public")
+@RequestMapping("/api/news")
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
-public class PublicController extends AdvancedBaseController {
-
-    @GetMapping("/categories")
-    public Response<List<CategoryResponse>> getAllCategory() {
-        List<CategoryResponse> categories = queryGateway.query(
-                new GetAllCategoryQuery(),
-                org.axonframework.messaging.responsetypes.ResponseTypes.multipleInstancesOf(CategoryResponse.class)
+@RequiredArgsConstructor
+public class NewsController extends AdvancedBaseController {
+    @GetMapping
+    public Response<List<NewsResponse>> getAllNews() {
+        List<NewsResponse> news = queryGateway.query(
+                new GetAllPostQuery(),
+                org.axonframework.messaging.responsetypes.ResponseTypes.multipleInstancesOf(NewsResponse.class)
         ).join();
-        return Response.Success(categories, "Lấy danh sách chuyên mục thành công.");
+        return Response.Success(news, "Lấy danh sách bài báo thành công.");
     }
 
-    @GetMapping("/news/{newsId}")
+    @GetMapping("/{newsId}")
     public Response<NewsResponse> getNewsById(@PathVariable Long newsId) {
         NewsResponse newsResponse = queryGateway.query(
                 GetPostByIdQuery.builder().id(newsId).build(),
@@ -50,5 +43,10 @@ public class PublicController extends AdvancedBaseController {
                 ResponseTypes.multipleInstancesOf(CommentResponse.class)
         ).join();
         return Response.Success(commentResponses, "Lấy comment thành công");
+    }
+
+    @PatchMapping("/addView")
+    public Response<String> addView(@RequestBody CountViewCommand command) {
+        return executeCommand(command);
     }
 }

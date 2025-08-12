@@ -200,3 +200,4 @@ README.html
 *.iml
 .idea
 .exercism
+/toxic-comment-detect/venv

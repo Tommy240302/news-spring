@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RequestAuthorResponse {
     private Long id;
-    private String userEmail;
+    private String userEmail; // <-- Đã hợp nhất
     private String profileUrl;
     private String sampleArticles;
     private String reason;
@@ -21,8 +21,8 @@ public class RequestAuthorResponse {
     private RequestAuthorStatus status;
 
     public RequestAuthorResponse(RequestAuthor requestAuthor) {
-        this.id = requestAuthor.getId(); // <-- Gán ID từ entity
-        this.userEmail = requestAuthor.getUser() != null ? requestAuthor.getUser().getEmail() : null; // <-- Gán email từ entity
+        this.id = requestAuthor.getId();
+        this.userEmail = requestAuthor.getUser() != null ? requestAuthor.getUser().getEmail() : null; // <-- Đã hợp nhất
         this.profileUrl = requestAuthor.getProfileUrl();
         this.sampleArticles = requestAuthor.getSampleArticles();
         this.reason = requestAuthor.getReason();

@@ -1,5 +1,6 @@
 package com.ptit.news.config;
 
+import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +33,15 @@ public class SecurityConfig {
     @Qualifier("handlerExceptionResolver")
     private HandlerExceptionResolver exceptionResolver;
 
+    @NonFinal
+    private final String[] PUBLIC_ENDPOINTS = {
+            "/api/auth/**", "/api/otp/send", "/api/master-data/**", "/health", "/init","api/public/**",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/api/news/**",
+            "/admin/author-requests"
+    };
+
     @Bean
     public JwtFilter jwtFilter() {
         return new JwtFilter(exceptionResolver);
@@ -40,23 +50,15 @@ public class SecurityConfig {
     @Autowired
     private AuthenticationProvider authenticationProvider;
 
-    // @Bean
-    // public AuthenticationManager
-    // authenticationManager(AuthenticationConfiguration config) throws Exception {
-    // return config.getAuthenticationManager();
-    // }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/api/otp/send", "/api/master-data/**", "/health", "/init",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**",
-                                "/admin/author-requests")
+                        .requestMatchers(PUBLIC_ENDPOINTS)
                         .permitAll()
+                        .requestMatchers("/api/users/me").authenticated()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll())
                 .sessionManagement(ssm -> ssm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -69,11 +71,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // hoặc "*", nếu không bảo mật
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(Arrays.asList("*"));
-        config.setAllowCredentials(true); // nếu bạn dùng cookies/session
-        config.setMaxAge(3600L); // thời gian cache CORS (giảm preflight)
+        config.setAllowCredentials(true);
+        config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
