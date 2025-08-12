@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RequiredArgsConstructor
-public class UserController extends BaseController {
+public class UserController extends AdvancedBaseController {
 
     @GetMapping("/{id}")
     public Response<UserResponse> getUserById(@PathVariable Long id) {
