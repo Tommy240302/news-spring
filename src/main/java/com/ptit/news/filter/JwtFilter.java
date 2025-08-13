@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,22 +32,23 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final HandlerExceptionResolver exceptionResolver;
 
-    // Danh sách các endpoint sẽ bỏ qua JWT
+    // Những path KHÔNG kiểm tra JWT (prefix match bằng startsWith)
     private static final List<String> EXCLUDED_PATHS = Arrays.asList(
-            "/api/auth/",
+            "/api/auth",            // /api/auth, /api/auth/...
             "/api/otp/send",
-            "/api/master-data/",
-            "/swagger-ui/",
-            "/v3/api-docs/",
-            "/api/news/public/",
-            "api/categories/"
+            "/api/master-data",
+            "/swagger-ui",
+            "/v3/api-docs",
+            "/api/news/public",
+            "/api/categories"       // /api/categories, /api/categories/...
     );
 
-    /**
-     * Kiểm tra xem path có nằm trong danh sách bỏ qua hay không
-     */
     private boolean isExcluded(String path) {
-        return EXCLUDED_PATHS.stream().anyMatch(path::startsWith);
+        // startsWith để match cả path gốc và các sub-path
+        for (String prefix : EXCLUDED_PATHS) {
+            if (path.startsWith(prefix)) return true;
+        }
+        return false;
     }
 
     @Override
@@ -58,9 +58,15 @@ public class JwtFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         try {
-            String path = request.getServletPath();
+            // BỎ QUA HOÀN TOÀN PRELIGHT CORS
+            if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+                filterChain.doFilter(request, response);
+                return;
+            }
 
-            // Nếu endpoint nằm trong danh sách bỏ qua => không check JWT
+            final String path = request.getServletPath();
+
+            // Bỏ qua các path public
             if (isExcluded(path)) {
                 filterChain.doFilter(request, response);
                 return;
@@ -69,6 +75,7 @@ public class JwtFilter extends OncePerRequestFilter {
             // Lấy token từ header
             final String authHeader = request.getHeader("Authorization");
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                // Không có token → để Security xử lý rule (nếu endpoint yêu cầu auth thì sẽ bị chặn ở layer trên)
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -76,7 +83,6 @@ public class JwtFilter extends OncePerRequestFilter {
             final String jwt = authHeader.substring(7);
             final String username = jwtService.extractUsername(jwt);
 
-            // Nếu chưa có authentication trong context => kiểm tra token
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
@@ -92,7 +98,7 @@ public class JwtFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
 
         } catch (Exception e) {
-            // Xử lý lỗi thông qua HandlerExceptionResolver
+            // Đẩy lỗi về GlobalExceptionHandler qua resolver
             exceptionResolver.resolveException(request, response, null, e);
         }
     }
