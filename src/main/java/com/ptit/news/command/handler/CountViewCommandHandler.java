@@ -45,7 +45,7 @@ public class CountViewCommandHandler {
                 return Response.Error("View invalid");
             }
             String now = LocalDateTime.now().toString();
-            redisTemplate.opsForValue().set(command.getIpV4()+"-"+command.getNewsId(),"Valid at"+now, Duration.ofMinutes(30));
+            redisTemplate.opsForValue().set(command.getIpV4()+"-"+command.getNewsId(),"Valid at"+now, Duration.ofMinutes(2));
             news.setViews(news.getViews()+1);
             newsRepository.save(news);
             return Response.Success("View Valid","View đã được tăng");
