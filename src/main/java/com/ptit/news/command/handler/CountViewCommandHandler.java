@@ -10,6 +10,7 @@ import org.axonframework.commandhandling.CommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -29,6 +30,7 @@ public class CountViewCommandHandler {
             "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
     private final Pattern pattern = Pattern.compile(IPV4_PATTERN);
 
+    @Transactional
     @CommandHandler
     public Response<String> handle(CountViewCommand command) {
         try {

@@ -34,7 +34,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     // Những path KHÔNG kiểm tra JWT (prefix match bằng startsWith)
     private static final List<String> EXCLUDED_PATHS = Arrays.asList(
-            "/api/auth",            // /api/auth, /api/auth/...
+            "/api/auth/",            // /api/auth, /api/auth/...
             "/api/otp/send",
             "/api/master-data",
             "/swagger-ui",
