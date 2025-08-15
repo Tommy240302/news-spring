@@ -23,7 +23,8 @@ public class News extends BaseEntity {
     private boolean status;
     private Integer views;
     private Date publishedAt;
-
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted = false;
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;

@@ -65,6 +65,7 @@ public class CreateNewsCommandHandler {
                     .category(category)
                     .title(command.getTitle())
                     .status(false)
+                    .isDeleted(false)
                     .image(command.getImage())
                     .views(0)
                     .content(command.getContent())

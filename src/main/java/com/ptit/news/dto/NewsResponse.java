@@ -22,6 +22,7 @@ public class NewsResponse {
     private String content;
     private String authorName;
     private Date publishedAt;
+    private Boolean isDeleted;
     private UserResponse user;
     private CategoryResponse category;
 
@@ -41,6 +42,7 @@ public class NewsResponse {
             this.authorName = null;
         }
         this.publishedAt = news.getPublishedAt();
+        this.isDeleted = news.getIsDeleted();
         this.user = new UserResponse(news.getAuthor());
         this.category = new CategoryResponse(news.getCategory());
     }
