@@ -76,7 +76,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST,"/api/author/create").hasRole("AUTHOR") // Chỉ author mới được đăng bài
                 .requestMatchers("/api/users/me").authenticated()
                 .requestMatchers("/api/**").authenticated()
-                .requestMatchers("/admin/**").hasRole("ADMIN") // Chỉ admin mới được truy cập
+                // .requestMatchers("/admin/**").hasRole("ADMIN") // Chỉ admin mới được truy cập
                 
                 // Mặc định cho phép
                 .anyRequest().permitAll()
