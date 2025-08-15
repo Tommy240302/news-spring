@@ -1,6 +1,7 @@
 package com.ptit.news.repository;
 
 import com.ptit.news.entity.News;
+import com.ptit.news.entity.User;
 import com.ptit.news.dto.NewsViewDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,9 @@ import java.util.Optional;
 
 @Repository
 public interface NewsRepository extends JpaRepository<News, Long> {
+
+    // Phương thức để lấy danh sách bài viết của một tác giả cụ thể (phục vụ chức năng thanh toán)
+    List<News> findByAuthor(User author);
 
     // Phương thức từ nhánh Dai
     List<News> findByStatus(Boolean status);

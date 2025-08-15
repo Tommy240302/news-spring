@@ -20,4 +20,12 @@ public class Payment extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User author;
+    @Column(name = "image_pm")
+    private String imagePm;
+
+    @Column(name = "content_pm")
+    private String contentPm;
+
+    @Column(name = "view_current")
+    private Integer viewCurrent;
 }

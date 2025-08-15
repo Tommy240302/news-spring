@@ -15,9 +15,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
-  redis:
-    host: 127.0.0.1
-    port: 6379
 
 # Cấu hình Swagger/OpenAPI
 springdoc:

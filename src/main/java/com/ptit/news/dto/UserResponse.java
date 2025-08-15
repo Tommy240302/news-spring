@@ -20,7 +20,6 @@ public class UserResponse {
     private String phone;
     private Boolean isEnabled;
     private Set<String> roles;
-    private String avatar;
 
     public UserResponse(User user) {
         this.id = user.getId();
@@ -29,7 +28,6 @@ public class UserResponse {
         this.lastName = user.getLastName();
         this.phone = user.getPhone();
         this.isEnabled = user.getIsEnabled();
-        this.avatar = user.getAvatar();
         this.roles = user.getRoles() != null
                 ? user.getRoles().stream().map(role -> role.getName()).collect(java.util.stream.Collectors.toSet())
                 : new HashSet<>();

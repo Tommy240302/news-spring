@@ -6,7 +6,7 @@ import org.axonframework.queryhandling.QueryHandler;
 import com.ptit.news.query.dto.GetUserByEmailQuery;
 import com.ptit.news.entity.User;
 import com.ptit.news.repository.UserRepository;
-import com.ptit.news.dto.UserResponse;
+import com.ptit.news.common.Response;
 import com.ptit.news.exception.ResourceNotFoundException;
 import com.ptit.news.exception.InvalidRequestException;
 import lombok.extern.slf4j.Slf4j;
@@ -19,14 +19,13 @@ public class GetUserByEmailQueryHandler {
     private UserRepository userRepository;
 
     @QueryHandler
-    public UserResponse handle(GetUserByEmailQuery query) {
+    public Response<User> handle(GetUserByEmailQuery query) {
         try {
             // Sửa lỗi: Thay findByEmail bằng findByEmailAndIsDeletedFalse
             User user = userRepository.findByEmailAndIsDeletedFalse(query.getEmail())
                     .orElseThrow(() -> new ResourceNotFoundException("User", "email", query.getEmail()));
 
-            // Dùng constructor sẵn có để convert sang UserResponse
-            return new UserResponse(user);
+            return Response.Success(user, "Lấy thông tin user thành công");
 
         } catch (ResourceNotFoundException e) {
             throw e;

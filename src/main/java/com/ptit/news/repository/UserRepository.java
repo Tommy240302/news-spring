@@ -40,4 +40,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // Đếm số người dùng được tạo sau một thời điểm nhất định và không bị xóa
     long countByCreatedAtAfterAndIsDeletedFalse(LocalDateTime createdAt);
+    List<User> findByRoles_Name(String roleName);
 }
