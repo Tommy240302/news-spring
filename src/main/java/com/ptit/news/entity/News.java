@@ -16,6 +16,7 @@ import java.util.List;
 @Table(name = "news")
 public class News extends BaseEntity {
     private String title;
+    @Lob
     private String summary;
     private String image;
     @Lob
