@@ -176,7 +176,7 @@ public class MasterDataService implements CommandLineRunner {
         log.info("Starting to initialize default categories...");
         String[] categories = {
                 "Thời sự", "Thể thao", "Kinh tế", "Giải trí", "Giáo dục",
-                "Công nghệ", "Sức khỏe", "Du lịch", "Pháp luật", "Văn hóa"
+                "Công nghệ", "Sức khỏe", "Du lịch", "Pháp luật", "Văn hóa","Thế giới","Chính trị - Xã hội"
         };
         for (String cat : categories) {
             if (!categoryRepository.existsByContentAndIsDeletedFalse(cat)) {

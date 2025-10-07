@@ -9,6 +9,7 @@ import com.ptit.news.entity.User;
 import com.ptit.news.repository.CommentRepository;
 import com.ptit.news.repository.NewsRepository;
 import com.ptit.news.repository.UserRepository;
+import lombok.extern.java.Log;
 import org.axonframework.commandhandling.CommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -43,7 +44,16 @@ public class AddCommentCommandHandler {
         String url = "http://localhost:8000/toxic-comment-detect";
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByEmail(authentication.getName()).orElse(null);
-
+        Comment parrentComment = new Comment();
+        if (command.getParentCommentId()!=null) {
+            parrentComment = commentRepository.findById(command.getParentCommentId()).orElse(null);
+            if (parrentComment == null) {
+                return Response.Error("Không tìm thấy Comment cha");
+            }
+        }
+        else {
+            parrentComment = null;
+        }
         if (user == null) {
             return Response.Error("Không tìm thấy authencation");
         }
@@ -64,9 +74,7 @@ public class AddCommentCommandHandler {
         ResponseEntity<Map> response = restTemplate.postForEntity(url, entity, Map.class);
 
         Map<String, Object> body = response.getBody();
-        System.out.println(body.get("is_toxic"));
         Boolean isToxic = (Boolean) body.get("is_toxic");
-        System.out.println(isToxic);
         if (isToxic) {
             Comment comment = Comment.builder()
                     .labelAI("Toxic")
@@ -74,6 +82,7 @@ public class AddCommentCommandHandler {
                     .user(user)
                     .isApproved(false)
                     .news(news)
+                    .parent(parrentComment)
                     .build();
             commentRepository.save(comment);
             return Response.Success(new CommentResponse(comment), "Đã ghi nhận comment");
@@ -84,6 +93,7 @@ public class AddCommentCommandHandler {
                 .user(user)
                 .isApproved(true)
                 .news(news)
+                .parent(parrentComment)
                 .build();
         commentRepository.save(comment);
         return Response.Success(new CommentResponse(comment), "Đã ghi nhận comment");

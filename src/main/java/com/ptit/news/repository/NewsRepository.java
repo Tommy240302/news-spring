@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -41,6 +42,11 @@ public interface NewsRepository extends JpaRepository<News, Long> {
 
     long countByCreatedAtAfterAndIsDeletedFalse(LocalDateTime createdAt);
 
-    // Phương thức từ nhánh production
-    List<News> findByCategory_Id(Long categoryId);
+//    Phương thức từ nhánh production
+//    List<News> findByCategory_Id(Long categoryId);
+
+    @Query("SELECT DISTINCT n FROM News n " +
+            "JOIN n.categories nc " +
+            "WHERE nc.selected = true AND nc.category.id = :categoryId")
+    List<News> findByCategory_Id(@Param("categoryId") Long categoryId);
 }

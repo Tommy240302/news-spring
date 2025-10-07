@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -23,13 +24,13 @@ public class NewsDTO {
     private Date updatedAt;
     private Long authorId;
     private String authorName;
-    private Long categoryId;
-    private String categoryName;
+    private Set<NewsCategoryDTO> categories;
+
 
     // Constructor để phù hợp với JPQL query trong AdminNewsService
     public NewsDTO(Long id, String title, String summary, String content, String image, int views, boolean status,
                    Date publishedAt, boolean isDeleted, Date createdAt, Date updatedAt,
-                   Long authorId, String authorName, Long categoryId, String categoryName) {
+                   Long authorId, String authorName, Set<NewsCategoryDTO> categories) {
         this.id = id;
         this.title = title;
         this.summary = summary;
@@ -43,7 +44,6 @@ public class NewsDTO {
         this.updatedAt = updatedAt;
         this.authorId = authorId;
         this.authorName = authorName;
-        this.categoryId = categoryId;
-        this.categoryName = categoryName;
+        this.categories = categories;
     }
 }

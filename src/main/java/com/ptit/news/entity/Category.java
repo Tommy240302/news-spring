@@ -1,25 +1,19 @@
 package com.ptit.news.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
+import java.util.HashSet;
 import java.util.List;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"newsCategories"})
+@ToString(exclude = {"newsCategories"})
 @Table(name = "categories")
 public class Category extends BaseEntity {
     private String content;
@@ -31,6 +25,6 @@ public class Category extends BaseEntity {
     @OneToMany(mappedBy = "parent")
     private List<Category> children;
 
-    @OneToMany(mappedBy = "category")
-    private List<News> news;
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<NewsCategory> newsCategories = new HashSet<>();
 }

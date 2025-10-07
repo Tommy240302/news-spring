@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class AddCommentCommand {
     private String comment;
     private Long newsId;
+    private Long parentCommentId;
 }

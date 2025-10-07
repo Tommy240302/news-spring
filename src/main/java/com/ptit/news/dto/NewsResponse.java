@@ -1,12 +1,15 @@
 package com.ptit.news.dto;
 
+import com.ptit.news.entity.Category;
 import com.ptit.news.entity.News;
+import com.ptit.news.entity.NewsCategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Data
 @Builder
@@ -44,7 +47,8 @@ public class NewsResponse {
         this.publishedAt = news.getPublishedAt();
         this.isDeleted = news.getIsDeleted();
         this.user = new UserResponse(news.getAuthor());
-        this.category = new CategoryResponse(news.getCategory());
+        Optional<NewsCategory> category_data = news.getCategories().stream().filter(NewsCategory::isSelected).findFirst();
+        category_data.ifPresent(newsCategory -> this.category = new CategoryResponse(newsCategory.getCategory()));
     }
 
 }

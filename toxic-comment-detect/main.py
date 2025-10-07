@@ -2,6 +2,7 @@ from toxic_predict import toxic_comment_predict
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from category_detect import category_detect
 
 app = FastAPI()
 
@@ -23,8 +24,15 @@ app.add_middleware(
 class CommentRequest(BaseModel):
     comment: str
 
+class ContentRequest(BaseModel):
+    content: str
 
 @app.post("/toxic-comment-detect")
 def commentDetect(req: CommentRequest):
     result = toxic_comment_predict(req.comment)
     return {"is_toxic": bool(result)}
+
+@app.post("/category_detect")
+def CategoryDetect(req: ContentRequest):
+    result = category_detect(req.content)
+    return {"detect_label": result}
