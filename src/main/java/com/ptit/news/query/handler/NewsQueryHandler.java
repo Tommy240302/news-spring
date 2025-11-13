@@ -19,7 +19,12 @@ public class NewsQueryHandler {
 
     @QueryHandler
     public List<NewsResponse> handle(GetNewsByCategoryIdQuery query) {
-        List<News> newsList = newsRepository.findByCategory_Id(query.getCategoryId());
+        Long categoryId = query.getCategoryId();
+
+        List<Long> categoryIds = newsRepository.findAllCategoryIdsByParent(categoryId);
+
+        List<News> newsList = newsRepository.findByCategory_IdIn(categoryIds);
+        
         return newsList.stream()
                 .map(NewsResponse::new) // Dùng constructor NewsResponse(News news)
                 .collect(Collectors.toList());

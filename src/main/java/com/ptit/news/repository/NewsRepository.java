@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.repository.query.Param;
+
 
 @Repository
 public interface NewsRepository extends JpaRepository<News, Long> {
@@ -43,4 +45,10 @@ public interface NewsRepository extends JpaRepository<News, Long> {
 
     // Phương thức từ nhánh production
     List<News> findByCategory_Id(Long categoryId);
+
+    List<News> findByCategory_IdIn(List<Long> categoryIds);
+
+    @Query("SELECT c.id FROM Category c WHERE c.id = :parentId OR c.parent.id = :parentId")
+    List<Long> findAllCategoryIdsByParent(@Param("parentId") Long parentId);
+
 }

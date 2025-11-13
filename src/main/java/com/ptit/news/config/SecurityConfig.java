@@ -77,7 +77,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/users/me").authenticated()
                 .requestMatchers("/api/**").authenticated()
                 .requestMatchers("/api/users/change-password").authenticated()
-                // .requestMatchers("/admin/**").hasRole("ADMIN") // Chỉ admin mới được truy cập
+                                // .requestMatchers("/admin/**").hasRole("ADMIN") // Chỉ admin mới được truy cập
                 
                 // Mặc định cho phép
                 .anyRequest().permitAll()
