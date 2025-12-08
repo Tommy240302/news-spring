@@ -1,7 +1,7 @@
 package com.ptit.news.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ptit.news.dto.PaymentDTO;
 import com.ptit.news.dto.PaymentDetailDTO;
 import com.ptit.news.dto.TransactionDTO;
 import com.ptit.news.entity.Payment;
@@ -10,8 +10,9 @@ import com.ptit.news.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -65,9 +66,15 @@ public class PaymentController {
         }
     }
 
-    @GetMapping("/history/{authorId}")
-    public ResponseEntity<List<Payment>> getTransactionHistory(@PathVariable Long authorId) {
-        List<Payment> history = paymentService.getTransactionHistory(authorId);
+    @GetMapping("/history")
+    public ResponseEntity<List<PaymentDTO>> getTransactionHistory() {
+        List<PaymentDTO> history = paymentService.getTransactionHistory();
         return ResponseEntity.ok(history);
+    }
+
+    @GetMapping("/calculate")
+    public ResponseEntity<List<Map<String, Object>>> getCalculateSalary() {
+
+        return ResponseEntity.ok(paymentService.getCalculateSalary());
     }
 }

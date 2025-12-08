@@ -1,15 +1,13 @@
 package com.ptit.news.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -28,4 +26,11 @@ public class Payment extends BaseEntity {
 
     @Column(name = "view_current")
     private Integer viewCurrent;
+
+    @ManyToOne
+    @JoinColumn(name = "transaction_id")
+    @JsonIgnore
+    private PaymentsTransaction transactionId;
+
+
 }

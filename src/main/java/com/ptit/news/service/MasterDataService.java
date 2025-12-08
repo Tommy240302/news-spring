@@ -133,6 +133,39 @@ public class MasterDataService implements CommandLineRunner {
             log.info("Writer user already exists: writer@gmail.com");
         }
 
+        // Tài khoản 4: writer2@gmail.com - có quyền READER và WRITER
+        if (userRepository.findByEmailAndIsDeletedFalse("writer2@gmail.com").isEmpty()) {
+            Role readerRole = roleRepository.findByName(UserRole.READER.getValue()).orElse(null);
+            Role authorRole = roleRepository.findByName(UserRole.AUTHOR.getValue()).orElse(null);
+
+            if (readerRole != null && authorRole != null) {
+                Set<Role> authorRoles = new HashSet<>();
+                authorRoles.add(readerRole);
+                authorRoles.add(authorRole);
+
+                User authorUser = User.builder()
+                        .email("writer2@gmail.com")
+                        .password(passwordEncoder.encode("123456"))
+                        .firstName("Writer")
+                        .lastName("User")
+                        .dateOfBirth(new Date())
+                        .isEnabled(true)
+                        .phone("444555666")
+                        .avatar("writer_avatar.png")
+                        .roles(authorRoles)
+                        .build();
+                authorUser.setIsDeleted(false); // Sửa lỗi: Gán isDeleted bằng setter
+                authorUser.setCreatedAt(LocalDateTime.now()); // Sửa lỗi: Gán createdAt bằng setter
+
+                userRepository.save(authorUser);
+                log.info("Created writer user: writer2@gmail.com");
+            } else {
+                log.error("Required roles not found, cannot create writer user");
+            }
+        } else {
+            log.info("Writer user already exists: writer2@gmail.com");
+        }
+
         // Tài khoản 3: admin@gmail.com - có quyền READER và ADMIN
         if (userRepository.findByEmailAndIsDeletedFalse("admin1@gmail.com").isEmpty()) {
             Role readerRole = roleRepository.findByName(UserRole.READER.getValue()).orElse(null);
