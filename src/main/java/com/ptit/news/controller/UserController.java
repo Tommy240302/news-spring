@@ -5,12 +5,16 @@ import com.ptit.news.dto.RequestAuthorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.ptit.news.command.dto.AddCommentCommand;
+import com.ptit.news.command.dto.ChangePasswordCommand;
+import com.ptit.news.dto.ChangePasswordRequest;
 import com.ptit.news.dto.CommentResponse;
 import org.springframework.web.bind.annotation.*;
 import com.ptit.news.query.dto.GetUserByIdQuery;
 import com.ptit.news.dto.UserResponse;
 import com.ptit.news.common.Response;
 import com.ptit.news.query.dto.GetUserByEmailQuery;
+
+import org.springframework.security.access.method.P;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +37,8 @@ public class UserController extends AdvancedBaseController {
     }
 
     @PostMapping("/request-author")
-    public ResponseEntity<Response<RequestAuthorResponse>> requestAuthor(@RequestBody CreateRequestAuthorCommand command) {
+    public ResponseEntity<Response<RequestAuthorResponse>> requestAuthor(
+            @RequestBody CreateRequestAuthorCommand command) {
         return executeCommandWithCustomStatus(command, HttpStatus.CREATED);
     }
 
@@ -44,4 +49,19 @@ public class UserController extends AdvancedBaseController {
         GetUserByEmailQuery query = GetUserByEmailQuery.builder().email(email).build();
         return executeQuery(query, UserResponse.class);
     }
+
+    @PostMapping("/change-password")
+    public Response<String> changePassword(@RequestBody ChangePasswordRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName(); // Lấy email từ token (principal)
+
+        ChangePasswordCommand command = ChangePasswordCommand.builder()
+                .email(email)
+                .oldPassword(request.getOldPassword())
+                .newPassword(request.getNewPassword())
+                .build();
+
+        return executeCommand(command);
+    }
+
 }

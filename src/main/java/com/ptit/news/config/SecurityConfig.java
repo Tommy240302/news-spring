@@ -45,7 +45,7 @@ public class SecurityConfig {
             "/v3/api-docs/**",
             "/api/news/**",
             "/api/categories/**",     // Cho phép public categories (nếu muốn private thì bỏ dòng này)
-            "/admin/author-requests"
+            "/admin/author-requests",
     };
 
     @Autowired
@@ -76,7 +76,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST,"/api/author/create").hasRole("AUTHOR") // Chỉ author mới được đăng bài
                 .requestMatchers("/api/users/me").authenticated()
                 .requestMatchers("/api/**").authenticated()
-                // .requestMatchers("/admin/**").hasRole("ADMIN") // Chỉ admin mới được truy cập
+                .requestMatchers("/api/users/change-password").authenticated()
+                                // .requestMatchers("/admin/**").hasRole("ADMIN") // Chỉ admin mới được truy cập
                 
                 // Mặc định cho phép
                 .anyRequest().permitAll()

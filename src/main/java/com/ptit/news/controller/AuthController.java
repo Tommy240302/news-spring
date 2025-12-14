@@ -6,6 +6,7 @@ import com.ptit.news.command.dto.CreateUserCommand;
 import com.ptit.news.command.dto.SignInCommand;
 import com.ptit.news.command.dto.UpdateUserCommand;
 import com.ptit.news.command.dto.AuthResponse;
+import com.ptit.news.command.dto.ChangePasswordCommand;
 import com.ptit.news.query.dto.GetUserByEmailQuery;
 import com.ptit.news.common.Response;
 import com.ptit.news.entity.User;
@@ -38,4 +39,10 @@ public class AuthController extends BaseController {
     public Response<User> updateUser(@RequestBody UpdateUserCommand command) {
         return executeCommand(command);
     }
+
+    @PostMapping("api/auth/change-password")
+    public Response<String> changePassword(@RequestBody ChangePasswordCommand command) {
+        return executeCommand(command);
+    }
+
 }
