@@ -1,5 +1,6 @@
 package com.ptit.news.command.dto;
 
+import com.ptit.news.common.enums.PaymentsStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,8 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddCommentCommand {
-    private String comment;
-    private Long newsId;
-    private Long parentCommentId;
+public class UpdatePaymentTransactionCommand {
+    private Long id;
+    private PaymentsStatus status;
 }

@@ -15,6 +15,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     // Tìm kiếm category theo content và không bị xóa
     Optional<Category> findByContentAndIsDeletedFalse(String content);
 
+    Optional<Category> findByContent(String content);
+
     // Tìm tất cả các category không bị xóa, sắp xếp theo content
     List<Category> findAllByIsDeletedFalseOrderByContentAsc();
 

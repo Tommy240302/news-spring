@@ -1,5 +1,6 @@
 package com.ptit.news.controller;
 
+import com.ptit.news.common.enums.DataType;
 import com.ptit.news.dto.NewsDTO;
 import com.ptit.news.common.Response;
 import com.ptit.news.service.AdminNewsService;
@@ -81,5 +82,11 @@ public class AdminNewsController {
     public ResponseEntity<Void> deleteNews(@PathVariable Long id) {
         adminNewsService.deleteNews(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/resolve/{id}")
+    public ResponseEntity<Void> resolvelabel(@PathVariable Long id) {
+        adminNewsService.resolveLabelConflict(id);
+        return ResponseEntity.ok().build();
     }
 }

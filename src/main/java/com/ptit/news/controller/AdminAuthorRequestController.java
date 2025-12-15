@@ -77,6 +77,7 @@ public class AdminAuthorRequestController { // Đã bỏ extends AdvancedBaseCon
                 if (authorRoleOptional.isPresent()) {
                     Role authorRole = authorRoleOptional.get();
                     user.getRoles().add(authorRole);
+                    user.setPaymentNumber(request.getPaymentNumber());
                     userRepository.save(user);
                     log.info("User {} role updated to AUTHOR.", user.getEmail());
                 } else {

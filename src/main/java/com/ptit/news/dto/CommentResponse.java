@@ -14,15 +14,19 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommentResponse {
+    private Long id;
     private String content;
     private boolean isApproved;
     private UserResponse user;
+    private Long parentCommentId;
     private LocalDateTime createAt;
 
     public CommentResponse(Comment comment) {
+        this.id  = comment.getId();
         this.content = comment.getContent();
         this.isApproved = comment.getIsApproved();
         this.user = new UserResponse(comment.getUser());
+        this.parentCommentId = comment.getParent() == null?null:comment.getParent().getId();
         this.createAt = comment.getCreatedAt();
     }
 }

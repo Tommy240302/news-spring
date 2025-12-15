@@ -1,12 +1,16 @@
 package com.ptit.news.service;
 
+import com.ptit.news.common.enums.DataType;
+import com.ptit.news.dto.NewsCategoryDTO;
 import com.ptit.news.dto.NewsDTO;
 import com.ptit.news.common.Response;
 import com.ptit.news.common.enums.StatusResponse;
 import com.ptit.news.entity.Category;
 import com.ptit.news.entity.News;
+import com.ptit.news.entity.NewsCategory;
 import com.ptit.news.entity.User;
 import com.ptit.news.repository.CategoryRepository;
+import com.ptit.news.repository.NewsCategoryRepository;
 import com.ptit.news.repository.NewsRepository;
 import com.ptit.news.repository.UserRepository;
 
@@ -17,9 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,6 +35,9 @@ public class AdminNewsService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private NewsCategoryRepository newsCategoryRepository;
 
     private NewsDTO convertToDto(News news) {
         NewsDTO dto = new NewsDTO();
@@ -51,10 +56,8 @@ public class AdminNewsService {
             dto.setAuthorName(news.getAuthor().getFirstName() + " " + news.getAuthor().getLastName());
         }
 
-        if (news.getCategory() != null) {
-            dto.setCategoryId(news.getCategory().getId());
-            dto.setCategoryName(news.getCategory().getContent());
-        }
+        Set<NewsCategoryDTO> categoriesDTO = news.getCategories().stream().map(NewsCategoryDTO::new).collect(Collectors.toSet());
+        dto.setCategories(categoriesDTO);
 
         return dto;
     }
@@ -79,73 +82,81 @@ public class AdminNewsService {
         return convertToDto(news);
     }
 
-    /**
-     * Tạo mới một tin tức
-     */
-    @Transactional
-    public NewsDTO createNews(NewsDTO newsDTO) {
-        News news = new News();
-        news.setTitle(newsDTO.getTitle());
-        news.setSummary(newsDTO.getSummary());
-        news.setContent(newsDTO.getContent());
-        news.setImage(newsDTO.getImage());
-        news.setStatus(false);
-        news.setViews(0);
-        news.setPublishedAt(null);
-        news.setIsDeleted(false);
+    public void resolveLabelConflict (long  newscategoryid) {
+        NewsCategory newsCategory = newsCategoryRepository.findById(newscategoryid)
+                .orElseThrow(() -> new RuntimeException("Not found"));
 
-        User author = userRepository.findById(newsDTO.getAuthorId())
-                .orElseThrow(() -> new RuntimeException("Author not found"));
-        news.setAuthor(author);
-
-        Category category = categoryRepository.findById(newsDTO.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-        news.setCategory(category);
-
-        return convertToDto(newsRepository.save(news));
+        newsCategory.setSelected(true);
+        newsCategoryRepository.save(newsCategory);
     }
-
-    /**
-     * Cập nhật tin tức theo ID
-     */
-    @Transactional
-    public NewsDTO updateNews(Long id, NewsDTO newsDTO) {
-        News existingNews = newsRepository.findByIdAndIsDeletedFalse(id)
-                .orElseThrow(() -> new RuntimeException("News not found or is deleted"));
-
-        existingNews.setTitle(newsDTO.getTitle());
-        existingNews.setSummary(newsDTO.getSummary());
-        existingNews.setContent(newsDTO.getContent());
-        existingNews.setImage(newsDTO.getImage());
-        existingNews.setStatus(newsDTO.isStatus());
-
-        // Cập nhật tác giả nếu thay đổi
-        if (newsDTO.getAuthorId() != null &&
-                (existingNews.getAuthor() == null || !existingNews.getAuthor().getId().equals(newsDTO.getAuthorId()))) {
-
-            User author = userRepository.findById(newsDTO.getAuthorId())
-                    .orElseThrow(() -> new RuntimeException("Author not found"));
-            existingNews.setAuthor(author);
-        }
-
-        // Cập nhật danh mục nếu thay đổi
-        if (newsDTO.getCategoryId() != null &&
-                (existingNews.getCategory() == null || !existingNews.getCategory().getId().equals(newsDTO.getCategoryId()))) {
-
-            Category category = categoryRepository.findById(newsDTO.getCategoryId())
-                    .orElseThrow(() -> new RuntimeException("Category not found"));
-            existingNews.setCategory(category);
-        }
-
-        // Cập nhật ngày xuất bản nếu thay đổi trạng thái
-        if (!existingNews.isStatus() && newsDTO.isStatus()) {
-            existingNews.setPublishedAt(new Date());
-        } else if (existingNews.isStatus() && !newsDTO.isStatus()) {
-            existingNews.setPublishedAt(null);
-        }
-
-        return convertToDto(newsRepository.save(existingNews));
-    }
+//
+//    /**
+//     * Tạo mới một tin tức
+//     */
+//    @Transactional
+//    public NewsDTO createNews(NewsDTO newsDTO) {
+//        News news = new News();
+//        news.setTitle(newsDTO.getTitle());
+//        news.setSummary(newsDTO.getSummary());
+//        news.setContent(newsDTO.getContent());
+//        news.setImage(newsDTO.getImage());
+//        news.setStatus(false);
+//        news.setViews(0);
+//        news.setPublishedAt(null);
+//        news.setIsDeleted(false);
+//
+//        User author = userRepository.findById(newsDTO.getAuthorId())
+//                .orElseThrow(() -> new RuntimeException("Author not found"));
+//        news.setAuthor(author);
+//
+//        Category category = categoryRepository.findById(newsDTO.getCategoryId())
+//                .orElseThrow(() -> new RuntimeException("Category not found"));
+//        news.setCategory(category);
+//
+//        return convertToDto(newsRepository.save(news));
+//    }
+//
+//    /**
+//     * Cập nhật tin tức theo ID
+//     */
+//    @Transactional
+//    public NewsDTO updateNews(Long id, NewsDTO newsDTO) {
+//        News existingNews = newsRepository.findByIdAndIsDeletedFalse(id)
+//                .orElseThrow(() -> new RuntimeException("News not found or is deleted"));
+//
+//        existingNews.setTitle(newsDTO.getTitle());
+//        existingNews.setSummary(newsDTO.getSummary());
+//        existingNews.setContent(newsDTO.getContent());
+//        existingNews.setImage(newsDTO.getImage());
+//        existingNews.setStatus(newsDTO.isStatus());
+//
+//        // Cập nhật tác giả nếu thay đổi
+//        if (newsDTO.getAuthorId() != null &&
+//                (existingNews.getAuthor() == null || !existingNews.getAuthor().getId().equals(newsDTO.getAuthorId()))) {
+//
+//            User author = userRepository.findById(newsDTO.getAuthorId())
+//                    .orElseThrow(() -> new RuntimeException("Author not found"));
+//            existingNews.setAuthor(author);
+//        }
+//
+//        // Cập nhật danh mục nếu thay đổi
+//        if (newsDTO.getCategoryId() != null &&
+//                (existingNews.getCategory() == null || !existingNews.getCategory().getId().equals(newsDTO.getCategoryId()))) {
+//
+//            Category category = categoryRepository.findById(newsDTO.getCategoryId())
+//                    .orElseThrow(() -> new RuntimeException("Category not found"));
+//            existingNews.setCategory(category);
+//        }
+//
+//        // Cập nhật ngày xuất bản nếu thay đổi trạng thái
+//        if (!existingNews.isStatus() && newsDTO.isStatus()) {
+//            existingNews.setPublishedAt(new Date());
+//        } else if (existingNews.isStatus() && !newsDTO.isStatus()) {
+//            existingNews.setPublishedAt(null);
+//        }
+//
+//        return convertToDto(newsRepository.save(existingNews));
+//    }
 
     /**
      * Xóa mềm tin tức

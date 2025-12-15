@@ -1,7 +1,7 @@
 package com.ptit.news.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ptit.news.dto.PaymentDTO;
 import com.ptit.news.dto.PaymentDetailDTO;
 import com.ptit.news.dto.TransactionDTO;
 import com.ptit.news.entity.News;
@@ -13,9 +13,7 @@ import com.ptit.news.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -105,11 +103,26 @@ public class PaymentService {
         throw new IllegalArgumentException("Không tìm thấy tác giả với ID: " + authorId);
     }
 
-    public List<Payment> getTransactionHistory(Long authorId) {
-        Optional<User> authorOptional = userRepository.findById(authorId);
-        if (authorOptional.isPresent()) {
-            return paymentRepository.findByAuthor(authorOptional.get());
-        }
-        return List.of();
+    public List<PaymentDTO> getTransactionHistory() {
+        return paymentRepository.findAll().stream().map(PaymentDTO::new).toList();
     }
+
+    public List<Map<String, Object>> getCalculateSalary() {
+
+        List<Object[]> res =  paymentRepository.calculateSalary();
+        List<Map<String, Object>> jsonData = new ArrayList<>();
+
+        for (Object[] row : res) {
+            Map<String, Object> data = new LinkedHashMap<>();
+            data.put("author_id", row[0]);
+            data.put("author_name", row[1]);
+            data.put("email", row[2]);
+            data.put("payment_number", row[3]);
+            data.put("total_views", row[4]);
+            data.put("views_already_paid", row[5]);
+            data.put("unpaid_views", row[6]);
+            jsonData.add(data);
+        }
+        return jsonData;
+     }
 }
