@@ -36,7 +36,6 @@ public class ViewTariffService {
     @Transactional
     public ViewTariffResponse createTariff(ViewTariffRequest request) {
         validateTariffRange(request);
-
         ViewTariff tariff = ViewTariff.builder()
                 .minView(request.getMinView())
                 .maxView(request.getMaxView())
@@ -73,6 +72,7 @@ public class ViewTariffService {
     }
 
     private void validateTariffRange(ViewTariffRequest request) {
+        if(request.getMaxView() == null) return;
         if (request.getMaxView() < request.getMinView()) {
             throw new IllegalArgumentException("Maximum view must be greater than or equal to minimum view");
         }

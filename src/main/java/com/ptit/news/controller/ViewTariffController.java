@@ -31,7 +31,7 @@ public class ViewTariffController {
     }
 
     @PostMapping
-    public ResponseEntity<ViewTariffResponse> createTariff(@Valid @RequestBody ViewTariffRequest request) {
+    public ResponseEntity<ViewTariffResponse> createTariff( @RequestBody ViewTariffRequest request) {
         ViewTariffResponse createdTariff = viewTariffService.createTariff(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTariff);
     }

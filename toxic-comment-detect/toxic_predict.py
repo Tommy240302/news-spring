@@ -10,4 +10,5 @@ def toxic_comment_predict(comment):
 
     vec = vectorizer.transform([comment])
     res = model.predict(vec)
+    print(res)
     return res[0] == 1

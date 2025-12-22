@@ -53,6 +53,7 @@ public class UpdatePaymentTransactionHandler {
                         .author(author)
                         .amount(p.getAmount())
                         .viewCurrent(p.getViewCurrent())
+                        .transactionId(paymentsTransaction)
                         .build();
                 paymentRepository.save(payment);
             });

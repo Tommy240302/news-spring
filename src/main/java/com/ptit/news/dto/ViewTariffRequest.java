@@ -17,8 +17,8 @@ public class ViewTariffRequest {
     @Min(value = 0, message = "Minimum view must be at least 0")
     private Long minView;
 
-    @NotNull(message = "Maximum view is required")
-    @Min(value = 0, message = "Maximum view must be at least 0")
+//    @NotNull(message = "Maximum view is required")
+//    @Min(value = 0, message = "Maximum view must be at least 0")
     private Long maxView;
 
     @NotNull(message = "Price per view is required")

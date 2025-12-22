@@ -94,7 +94,7 @@ public class CreateNewsCommandHandler {
             ResponseEntity<Map> response = restTemplate.postForEntity(categoryDetectUrl, entity, Map.class);
             Map<String, Object> body = response.getBody();
             String categoriLabel = (String) body.get("detect_label");
-            System.out.println(categoriLabel);
+//            System.out.println(categoriLabel);
             Category categoryDetect = categoryRepository.findByContent(categoriLabel).orElse(null);
             //Human
             NewsCategory newsCategoryHM = NewsCategory.builder()

@@ -34,6 +34,7 @@ public class CountViewCommandHandler {
     @CommandHandler
     public Response<String> handle(CountViewCommand command) {
         try {
+
             News news = newsRepository.findById(command.getNewsId()).orElse(null);
             if (news==null) {
                 return Response.Error("News invalid");
