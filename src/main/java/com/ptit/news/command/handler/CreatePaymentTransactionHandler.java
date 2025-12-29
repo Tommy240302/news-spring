@@ -22,9 +22,9 @@ public class CreatePaymentTransactionHandler {
     @CommandHandler
     public Response<PaymentsTransaction> handle(CreatePaymentTransactionCommand command) {
         List<PaymentsTransaction> paymentsTransactions = paymentTransactionRepository.findAll().stream().filter(p->p.getStatus() == PaymentsStatus.PENDING).toList();
-        if (!paymentsTransactions.isEmpty()) {
-            return Response.Error("Vẫn còn hóa đơn chưa hoàn thành");
-        }
+        // if (!paymentsTransactions.isEmpty()) {
+        //     return Response.Error("Vẫn còn hóa đơn chưa hoàn thành");
+        // }
         PaymentsTransaction paymentsTransaction =
                 PaymentsTransaction.builder()
                         .jsonData(command.getJsonData())
